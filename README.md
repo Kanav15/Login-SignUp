@@ -12,7 +12,7 @@ A simple user authentication system using Node.js, Express, and MongoDB. This pr
 <h3>To Download</h3>
 <li>install Node.js</li>
 <li>Install Modules
-Use npm i express mongoose hbs nodemon
+npm install express mongoose bcryptjs jsonwebtoken body-parser express-session
 </li>
 <pre> To RUN The File use 
  <h2>Node  ./index.js</h2></pre>
