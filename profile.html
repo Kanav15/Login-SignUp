@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Profile</h1>
+        <p><strong>Username:</strong> <%= user.username %></p>
+        <p><strong>Role:</strong> <%= user.role %></p>
+
+        <!-- Display student-specific information only if role is student -->
+        <% if (user.role === 'student') { %>
+            <p><strong>Department:</strong> <%= user.department %></p>
+            <p><strong>Current Year:</strong> <%= user.currentYear %></p>
+            <p><strong>Division:</strong> <%= user.division %></p>
+            <p><strong>Student ID:</strong> <%= user.studentId %></p>
+        <% } %>
+
+        <a href="/home">Back to Home</a>
+        <form action="/logout" method="POST">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+</body>
+</html>
