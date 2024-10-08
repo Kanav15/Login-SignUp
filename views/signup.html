@@ -1,4 +1,3 @@
-<!-- views/signup.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,6 +17,31 @@
                 <option value="student">Student</option>
                 <option value="faculty">Faculty</option>
             </select>
+
+            <!-- Department Field -->
+            <select name="department" required>
+                <option value="" disabled selected>Select your department</option>
+                <option value="Computer">Computer</option>
+                <option value="IT">Information Technology (IT)</option>
+                <option value="AIDS">Artificial Intelligence and Data Science (AIDS)</option>
+                <option value="EXTC">Electronics and Telecommunication (EXTC)</option>
+            </select>
+
+            <!-- Division Field -->
+            <input type="text" name="division" placeholder="Division" required />
+
+            <!-- Current Year Field -->
+            <select name="currentYear" required>
+                <option value="" disabled selected>Select your current year</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+            </select>
+
+            <!-- Student ID Field -->
+            <input type="text" name="studentId" placeholder="Student ID" required />
+            
             <button type="submit">Signup</button>
         </form>
         <p>Already have an account? <a href="/login">Login here</a></p>
