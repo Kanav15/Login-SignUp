@@ -1,75 +1,60 @@
 // routes/auth.js
-const express = require('express');
-const bcrypt = require('bcryptjs');
-const User = require('../models/User');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Signup</h1>
+        <form id="signupForm" action="/register" method="POST">
+            <input type="text" name="username" placeholder="Username" required />
+            <input type="password" name="password" placeholder="Password (min 8 characters)" required />
+            <select name="role" required>
+                <option value="" disabled selected>Select your role</option>
+                <option value="student">Student</option>
+                <option value="faculty">Faculty</option>
+            </select>
 
-const router = express.Router();
+            <!-- Department Field -->
+            <select name="department" required>
+                <option value="" disabled selected>Select your department</option>
+                <option value="Computer">Computer</option>
+                <option value="IT">Information Technology (IT)</option>
+                <option value="AIDS">Artificial Intelligence and Data Science (AIDS)</option>
+                <option value="EXTC">Electronics and Telecommunication (EXTC)</option>
+            </select>
 
-// Register route
-router.post('/register', async (req, res) => {
-    const { username, password, role, department, currentYear, division, studentId } = req.body;
+            <!-- Division Field -->
+            <input type="text" name="division" placeholder="Division" required />
 
-    // Check if password length is at least 8 characters
-    if (password.length < 8) {
-        return res.redirect('/signup?error=Password must be at least 8 characters long');
-    }
+            <!-- Current Year Field -->
+            <select name="currentYear" required>
+                <option value="" disabled selected>Select your current year</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+            </select>
 
-    // Check if username already exists
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-        return res.redirect('/signup?error=Username already exists');
-    }
-
-    // Validate student-related fields if the role is 'student'
-    if (role === 'student') {
-        if (!department || !currentYear || !division || !studentId) {
-            return res.redirect('/signup?error=Please fill all required student details');
+            <!-- Student ID Field -->
+            <input type="text" name="studentId" placeholder="Student ID" required />
+            
+            <button type="submit">Signup</button>
+        </form>
+        <p>Already have an account? <a href="/login">Login here</a></p>
+    </div>
+    <script>
+        // Handle server responses
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        if (error) {
+            alert(error); // Show alert if there's an error message
         }
-    }
+    </script>
+</body>
+</html>
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({
-        username,
-        password: hashedPassword,
-        role,
-        department: role === 'student' ? department : null, // Only set for students
-        currentYear: role === 'student' ? currentYear : null, // Only set for students
-        division: role === 'student' ? division : null, // Only set for students
-        studentId: role === 'student' ? studentId : null // Only set for students
-    });
-
-    try {
-        await user.save();
-        req.session.userId = user._id; // Set user session
-        res.redirect('/home'); // Redirect to home after signup
-    } catch (error) {
-        res.redirect(`/signup?error=Error registering user: ${error.message}`);
-    }
-});
-
-// Login route
-router.post('/login', async (req, res) => {
-    const { username, password } = req.body;
-
-    const user = await User.findOne({ username });
-    if (!user) {
-        return res.redirect('/login?error=User not found');
-    }
-
-    // Check if password is correct
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-        return res.redirect('/login?error=Invalid credentials');
-    }
-
-    req.session.userId = user._id; // Set user session
-    res.redirect('/home'); // Redirect to home after login
-});
-
-// Logout route
-router.post('/logout', (req, res) => {
-    req.session.destroy();
-    res.redirect('/login'); // Redirect to login after logout
-});
-
-module.exports = router;
