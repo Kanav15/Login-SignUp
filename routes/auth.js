@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Register route
 router.post('/register', async (req, res) => {
-    const { username, password, role } = req.body;
+    const { username, password, role, department, currentYear, division, studentId } = req.body;
 
     // Check if password length is at least 8 characters
     if (password.length < 8) {
@@ -20,8 +20,23 @@ router.post('/register', async (req, res) => {
         return res.redirect('/signup?error=Username already exists');
     }
 
+    // Validate student-related fields if the role is 'student'
+    if (role === 'student') {
+        if (!department || !currentYear || !division || !studentId) {
+            return res.redirect('/signup?error=Please fill all required student details');
+        }
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ username, password: hashedPassword, role });
+    const user = new User({
+        username,
+        password: hashedPassword,
+        role,
+        department: role === 'student' ? department : null, // Only set for students
+        currentYear: role === 'student' ? currentYear : null, // Only set for students
+        division: role === 'student' ? division : null, // Only set for students
+        studentId: role === 'student' ? studentId : null // Only set for students
+    });
 
     try {
         await user.save();
